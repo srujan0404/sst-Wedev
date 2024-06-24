@@ -1,43 +1,33 @@
-import { useContext } from "react";
-import CartContext from "../../context/CartContext";
-function AddToCart({ product}) {
-    const { cart, increaseQuantity, decreaseQuantity } = useContext(CartContext);
-    function increase() {
-        increaseQuantity(product);
-    }
-    function decrease() {
-        decreaseQuantity(product);
-    }
-    const quantity = cart[product.id] ? cart[product.id].quantity : 0;
-    if (quantity === 0) {
-        return (
-            <div>
-                <button onClick={increase}>AddToCart</button>
-            </div>
-     )  
-    } else {
-        return ( 
-            <div>
-                <button onClick={decrease}>-</button>
-                <span>{quantity}</span>
-                <button onClick={increase}>+</button>
+// AddToCart.js
+import React from 'react';
+import { useDispatch,useSelector } from 'react-redux';
+function AddToCart({ product, handleAddToCart, handleIncrement, handleDecrement, qty }) {
+    function increase(){
+        // dispatch({type: 'INCREMENT', payload: product})
+        dispatchEvent({type:"ADD_TO_CART",payload:product});
 
-            </div>
-        )
     }
+    function decrease(){
+        // dispatch({type: 'DECREMENT', payload: product})
+        dispatchEvent({type:"REMOVE_FROM_CART",payload:product});
+    }
+    let cart = useSelector((state) => {
+        return state.items[product.id].qty;
+    });
 
+  return (
+    <div className="add-to-cart">
+      {qty > 0 ? (
+        <div>
+          <button onClick={decrease}>-</button>
+          <span>{qty}</span>
+          <button onClick={increase}>+</button>
+        </div>
+      ) : (
+        <button onClick={handleAddToCart}>Add to Cart</button>
+      )}
+    </div>
+  );
 }
 
 export default AddToCart;
-
-
-// array of object 
-// object of object 
-
-//[{id: 1, quantity: 10}, {id: 2, quantity: 10}, {id: 3, quantity: 10}, {id: 4, quantity: 10}]
-// cart = 
-// {id:{id: 1, quantity: 10}, id:{id: 2, quantity: 10}, id:{id: 3, quantity: 10}, id:{id: 4, quantity: 10}}
-//cart["3"]
-
-// Object.value(obj);
-// Object.keys(obj);
